@@ -1,0 +1,16 @@
+body{
+    width: 300px;
+}
+
+#name{
+    font-size: larger;
+    font-family: Courier, monospace;
+}
+
+a{
+    color: gray;
+}
+
+a:hover{
+    color: red;
+}

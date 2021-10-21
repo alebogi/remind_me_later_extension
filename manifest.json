@@ -1,0 +1,28 @@
+{
+    "name": "Gmail-remind me later!",
+    "description": "Creates 'Remind me later' button in gmail that helps you postpone notification for that mail, which later appears as notification on your PC.",
+    "version": "1.0",
+    "manifest_version": 3,
+    "background": {
+      "service_worker": "background.js"
+    },
+    "permissions": ["storage", "notifications"],
+    "action": {
+        "default_popup": "user_interface.html",
+        "default_icon": {
+            "16": "/images/icons/logo_16.png",
+            "32": "/images/icons/logo_32.png",
+            "48": "/images/icons/logo_48.png",
+            "96": "/images/icons/logo_96.png",
+            "128": "/images/icons/logo_128.png"
+        }
+    },
+    "icons": {
+        "16": "/images/icons/logo_16.png",
+        "32": "/images/icons/logo_32.png",
+        "48": "/images/icons/logo_48.png",       
+        "96": "/images/icons/logo_96.png",
+        "128": "/images/icons/logo_128.png"
+    },
+    "options_page": "options.html"
+  }
