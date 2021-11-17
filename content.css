@@ -1,6 +1,13 @@
-/* #remindme::before {
-    background-image: url("./images/clock.png");
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: 20px;
+/* span.ams.remindMeClass {
+    background-image: url("./images/clock.png") !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-size: 20px !important;
+} */
+
+/* #remindme {
+    background-image: url("./images/clock.png") !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-size: 20px !important;
 } */

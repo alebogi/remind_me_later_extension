@@ -3,7 +3,7 @@ chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
   
         chrome.scripting.executeScript({
             target: { tabId: tabId },
-            files: ['content.js', 'content.css']
+            files: ['content.js']
         });
         
       //   if (chrome.runtime.lastError) {
