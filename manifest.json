@@ -6,7 +6,7 @@
     "background": {
       "service_worker": "background.js"
     },
-    "permissions": ["storage", "notifications", "activeTab", "tabs", "scripting"],
+    "permissions": ["storage", "notifications", "activeTab", "tabs", "scripting", "alarms"],
     "host_permissions": [
         "*://mail.google.com//*"
     ],
@@ -35,8 +35,9 @@
           ],
           "css": ["content.css"],
           "js": [
-              "content.js"
-          ]
+              "content.js", "jquery-1.11.3.min.js"
+          ],
+          "run_at": "document_end"
       }
   ]
   }
