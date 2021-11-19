@@ -22,7 +22,7 @@ function removeAll(){
     if (elem !== undefined && elem !=null){
         elem.remove();
     }
-    //document.getElementById("buttonContainer").innerHTML = "";
+    chrome.storage.local.set({"timer": -1}, function() {});
 }
 
 function addButton(){
@@ -48,7 +48,32 @@ function addButton(){
     
 }
 
+
+
 function remindMeFunc(){
-    console.log("REMIND ME 2")
+    console.log("REMIND ME");
+    
+//odaberi interval
+chrome.storage.local.set({"timer": 5}, function() {});
+    
+    startTimer();
 }
+
+
+
+function startTimer(){
+    chrome.storage.local.get(["timer"], function (result) {
+        if (result.timer > -1){
+            //chrome.alarms.create("myAlarm", {delayInMinutes: 0.2} );
+            chrome.notifications.create('test', {
+                type: 'basic',
+                iconUrl: 'images/icons/logo_32.png',
+                title: 'Test Message',
+                message: 'You are awesome!',
+                priority: 2
+            });
+        }
+    });
+}
+
 

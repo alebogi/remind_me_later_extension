@@ -17,3 +17,14 @@ chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
   })
 
 
+chrome.alarms.onAlarm.addListener((alarm) => {
+    if (alarm.name === "myAlarm") {
+        chrome.notifications.create('test', {
+            type: 'basic',
+            iconUrl: 'images/icons/logo_32.png',
+            title: 'Test Message',
+            message: 'You are awesome!',
+            priority: 2
+        });
+    }
+});
