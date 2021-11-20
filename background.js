@@ -5,17 +5,14 @@ chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
             target: { tabId: tabId },
             files: ['content.js']
         });
-        
-      //   if (chrome.runtime.lastError) {
-      //     var errorMsg = chrome.runtime.lastError.message
-      //     var reg = /\w*Cannot access contents of url\w*/
-      //     if (errorMsg == "Cannot access a chrome:// URL" || errorMsg.match(reg)) {
-      //         // Error handling here
-      //     }
-      //  }
+     
     }
-  })
+})
 
+//globals
+let mailSubject = "";
+let senderName = "";
+let senderEmail = "";
 
 
 //waiting for a message to start timer
@@ -25,6 +22,11 @@ chrome.runtime.onMessage.addListener(
                   "from a content script:" + sender.tab.url :
                   "from the extension");
       if (request.task === "start"){
+        //get all info about mail
+        mailSubject = request.subject;
+        senderName = request.senderName;
+        senderEmail = request.senderMail;
+
         chrome.alarms.create("myAlarm", {delayInMinutes: request.timerValue} );
         sendResponse({status: "started"});
       }
@@ -39,9 +41,10 @@ chrome.alarms.onAlarm.addListener((alarm) => {
             type: 'basic',
             iconUrl: 'images/icons/logo_48.png',
             title: "Reminder!",
-            message: 'You are awesome!',
+            message: "You have e-mail: " + mailSubject,
             priority: 2,
-            contextMessage: "Ovo je context message i ne znam cemu sluzi."
+            contextMessage: "From: "+ senderName + "(" + senderEmail + ")",
+            requireInteraction: true
         });
         chrome.alarms.clear("myAlarm");
     }
