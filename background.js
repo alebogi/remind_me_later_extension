@@ -39,7 +39,7 @@ chrome.alarms.onAlarm.addListener((alarm) => {
     if (alarm.name === "myAlarm") {
         chrome.notifications.create('remindMe', {
             type: 'basic',
-            iconUrl: 'images/icons/logo_48.png',
+            iconUrl: 'images/icons/logo_notif.png',
             title: "Reminder!",
             message: "You have e-mail: " + mailSubject,
             priority: 2,
