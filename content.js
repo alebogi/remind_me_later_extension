@@ -54,7 +54,9 @@ function remindMeFunc(){
     console.log("REMIND ME");
     
 //odaberi interval
-chrome.storage.local.set({"timer": 5}, function() {});
+let timerVal = 0.2;
+
+    chrome.storage.local.set({"timer": timerVal}, function() {});
     
     startTimer();
 }
@@ -64,14 +66,12 @@ chrome.storage.local.set({"timer": 5}, function() {});
 function startTimer(){
     chrome.storage.local.get(["timer"], function (result) {
         if (result.timer > -1){
-            //chrome.alarms.create("myAlarm", {delayInMinutes: 0.2} );
-            chrome.notifications.create('test', {
-                type: 'basic',
-                iconUrl: 'images/icons/logo_32.png',
-                title: 'Test Message',
-                message: 'You are awesome!',
-                priority: 2
+            
+            //send message to background.js to start timer
+            chrome.runtime.sendMessage({timerValue: result.timer, task: "start"}, function(response) {
+                console.log(response.status);
             });
+
         }
     });
 }

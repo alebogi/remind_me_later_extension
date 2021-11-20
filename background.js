@@ -17,14 +17,32 @@ chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
   })
 
 
+
+//waiting for a message to start timer
+chrome.runtime.onMessage.addListener(
+    function(request, sender, sendResponse) {
+      console.log(sender.tab ?
+                  "from a content script:" + sender.tab.url :
+                  "from the extension");
+      if (request.task === "start"){
+        chrome.alarms.create("myAlarm", {delayInMinutes: request.timerValue} );
+        sendResponse({status: "started"});
+      }
+    }
+);
+
+
+//timer otkucao, treba da se posalje notif
 chrome.alarms.onAlarm.addListener((alarm) => {
     if (alarm.name === "myAlarm") {
-        chrome.notifications.create('test', {
+        chrome.notifications.create('remindMe', {
             type: 'basic',
-            iconUrl: 'images/icons/logo_32.png',
-            title: 'Test Message',
+            iconUrl: 'images/icons/logo_48.png',
+            title: "Reminder!",
             message: 'You are awesome!',
-            priority: 2
+            priority: 2,
+            contextMessage: "Ovo je context message i ne znam cemu sluzi."
         });
+        chrome.alarms.clear("myAlarm");
     }
 });
