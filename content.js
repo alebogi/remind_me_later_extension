@@ -1,20 +1,18 @@
-chrome.storage.local.get(["loadNum"], function (result) {
-    console.log('loadNum currently is ' + result.loadNum);
-    if (result.loadNum == undefined ) { //first time loading page, just add button
-        chrome.storage.local.set({"loadNum": 1}, function() {});
-        console.log('loadNum set 1');
-        addButton();
+// chrome.storage.local.get(["loadNum"], function (result) {
+//     if (result.loadNum == undefined ) { //first time loading page, just add button
+//         chrome.storage.local.set({"loadNum": 1}, function() {});
+//         addButton();
        
-    }else{ //>1 time loading page, first remove the button, that add it again
-        let newNum = result.loadNum + 1;
-        chrome.storage.local.set({"loadNum": newNum}, function() {});
-        console.log('loadNum set ' + newNum);
-        removeAll();
-        addButton();
-    }
-});
+//     }else{ //>1 time loading page, first remove the button, that add it again
+//         let newNum = result.loadNum + 1;
+//         chrome.storage.local.set({"loadNum": newNum}, function() {});
+//         removeAll();
+//         addButton();
+//     }
+// });
 
-
+removeAll();
+addButton();
 
 function removeAll(){
     
@@ -67,7 +65,7 @@ function remindMeFunc(){
     console.log("Email: " + senderMail);
     
 //odaberi interval-otvara se popup gde se bira interval i setuje se u local storage-u na ovaj nacin
-let timerVal = 0.2;
+let timerVal = 0.1;
 chrome.storage.local.set({"timer": timerVal}, function() {});
     
     chrome.storage.local.get(["timer"], function (result) {
