@@ -76,3 +76,7 @@ footer {
     font-family: 'Courier New', Courier, monospace;
     align-items: center;
 }
+
+.remindersArr{
+    padding-left: 10px;
+}
