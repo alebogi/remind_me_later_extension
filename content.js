@@ -49,7 +49,6 @@ function addButton(){
 }
 
 
-
 function remindMeFunc(){
     console.log("REMIND ME");
 
@@ -63,12 +62,122 @@ function remindMeFunc(){
     let senderMail = senderObj.getAttribute("email");
     console.log("Name: " + senderName);
     console.log("Email: " + senderMail);
+    //-----------------------------------------------------
     
-//odaberi interval-otvara se popup gde se bira interval i setuje se u local storage-u na ovaj nacin
-let timerVal = 0.1;
-chrome.storage.local.set({"timer": timerVal}, function() {});
+     //open popup that lets you choose time inetrval
+
+     const modal = document.createElement("dialog");
+     modal.setAttribute(
+     "style",`
+     height:150px;
+     border: none;
+     top:150px;
+     border-radius:20px;
+     background-color:white;
+     position: fixed; box-shadow: 0px 12px 48px rgba(29, 5, 64, 0.32);
+     `);
+
+     modal.innerHTML = `
+     <div class="modal-content">
+        <button  class="close closeBtn" style:"align:right;">&times;</button>
+        </br>   
+        <p>Choose time interval:</p> </br>
+        <div class="selectMenuDiv>
+        </div>
+        
+     </div>
+     `;
+
+     
+
+    let newSelect = document.createElement("select");
+    newSelect.className = "selectClass";
+
+    let option0 = document.createElement("option");
+    option0.value = "0";
+    option0.innerText = "Remind me later";
+    newSelect.appendChild(option0);
+
+
+    let option1 = document.createElement("option");
+    option1.value = "0.1";
+    option1.innerText = "5 min";
+    newSelect.appendChild(option1);
+
+    let option2 = document.createElement("option");
+    option2.value = "10";
+    option2.innerText = "10 min";
+    newSelect.appendChild(option2);
+
+    let option3 = document.createElement("option");
+    option3.value = "15";
+    option3.innerText = "15 min";
+    newSelect.appendChild(option3);
+
+    let option4 = document.createElement("option");
+    option4.value = "30";
+    option4.innerText = "30 min";
+    newSelect.appendChild(option4);
+
+    let option5 = document.createElement("option");
+    option5.value = "60";
+    option5.innerText = "1 hour";
+    newSelect.appendChild(option5);
+
+    let option6 = document.createElement("option");
+    option6.value = "120";
+    option6.innerText = "2 hours";
+    newSelect.appendChild(option6);
+
+    let option7 = document.createElement("option");
+    option7.value = "180";
+    option7.innerText = "3 hours";
+    newSelect.appendChild(option7);
+         
+    modal.appendChild(newSelect);
     
-    chrome.storage.local.get(["timer"], function (result) {
+    let br = document.createElement("br");
+    modal.appendChild(br);
+
+    let newBtn = document.createElement("button");
+    newBtn.className="submitBtn";
+    newBtn.innerText = "Submit";
+    newBtn.onclick = () => {
+        var select = modal.getElementsByClassName("selectClass")[0];
+        var value = select.options[select.selectedIndex].value;
+        alert(value);
+        var timerVal = parseInt(value);
+        if(value > 0){
+            chrome.storage.local.set({"timer": timerVal}, function() {});
+            chrome.runtime.sendMessage({
+                    timerValue: timerVal, 
+                    task: "start",
+                    subject: subject,
+                    senderName: senderName,
+                    senderMail: senderMail
+                }
+                , 
+                function(response) {
+                    console.log(response.status);
+                }
+            );
+            dialog.close();
+        }
+    }
+
+    modal.appendChild(newBtn);
+
+    document.body.appendChild(modal);
+    const dialog = document.querySelector("dialog");
+    dialog.showModal();
+   
+    dialog.getElementsByClassName("closeBtn")[0].addEventListener("click", () => {
+        dialog.close();
+    });
+
+ 
+    //------------------------------------------------------
+   /* chrome.storage.local.get(["timer"], function (result) {
         if (result.timer > -1){
             
             //send message to background.js to start timer
@@ -85,22 +194,29 @@ chrome.storage.local.set({"timer": timerVal}, function() {});
             );
 
         }
-    });
+    });*/
 }
 
 
 
-function startTimer(){
+function sendMssg(){
     chrome.storage.local.get(["timer"], function (result) {
         if (result.timer > -1){
             
             //send message to background.js to start timer
-            chrome.runtime.sendMessage({timerValue: result.timer, task: "start"}, function(response) {
-                console.log(response.status);
-            });
+            chrome.runtime.sendMessage({
+                    timerValue: result.timer, 
+                    task: "start",
+                    subject: subject,
+                    senderName: senderName,
+                    senderMail: senderMail
+                }
+                , 
+                function(response) {
+                    console.log(response.status);
+                }
+            );
 
         }
     });
 }
-
-
