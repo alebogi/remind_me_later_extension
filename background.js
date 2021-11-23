@@ -33,7 +33,8 @@ chrome.runtime.onMessage.addListener(
         notifsInfo.push(notif);
         notifsInfo.sort(mySort);
 
-        chrome.alarms.create( {delayInMinutes: request.timerValue} );
+        var alarmName = request.subject + " " + request.timerValue;
+        chrome.alarms.create(alarmName, {delayInMinutes: request.timerValue} );
         sendResponse({status: "started"});
 
         chrome.storage.local.set({"notifsInfo": notifsInfo}, function() {});
