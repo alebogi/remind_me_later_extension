@@ -33,8 +33,10 @@ chrome.runtime.onMessage.addListener(
         notifsInfo.push(notif);
         notifsInfo.sort(mySort);
 
-        chrome.alarms.create("myAlarm", {delayInMinutes: request.timerValue} );
+        chrome.alarms.create( {delayInMinutes: request.timerValue} );
         sendResponse({status: "started"});
+
+        chrome.storage.local.set({"notifsInfo": notifsInfo}, function() {});
       }
     }
 );
@@ -42,9 +44,10 @@ chrome.runtime.onMessage.addListener(
 
 //timer otkucao, treba da se posalje notif
 chrome.alarms.onAlarm.addListener((alarm) => {
-    if (alarm.name === "myAlarm") {
+    //if (alarm.name === "myAlarm") {
         //get notification info from array
         let notif = notifsInfo.pop();
+        chrome.storage.local.set({"notifsInfo": notifsInfo}, function() {});
 
         chrome.notifications.create('remindMe', {
             type: 'basic',
@@ -55,6 +58,6 @@ chrome.alarms.onAlarm.addListener((alarm) => {
             contextMessage: "From: "+ notif.senderName + "(" + notif.senderEmail + ")",
             requireInteraction: true
         });
-        chrome.alarms.clear("myAlarm");
-    }
+        //chrome.alarms.clear("myAlarm");
+   // }
 });

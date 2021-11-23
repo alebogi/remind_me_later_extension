@@ -53,15 +53,18 @@ function remindMeFunc(){
     console.log("REMIND ME");
 
     //fetching e-mail subject
-    let subject = document.getElementsByClassName("hP")[0].innerText;
-    console.log("Subject: " + subject);
+    let subjectToSend = document.getElementsByClassName("hP")[0].innerText;
+    chrome.storage.local.set({"subject": subjectToSend}, function() {});
+    console.log("Subject: " + subjectToSend);
 
     //fetching e-mail sender
     let senderObj = document.getElementsByClassName("gD")[0];
-    let senderName = senderObj.getAttribute("name");
-    let senderMail = senderObj.getAttribute("email");
-    console.log("Name: " + senderName);
-    console.log("Email: " + senderMail);
+    let senderNameToSend = senderObj.getAttribute("name");
+    let senderMailToSend = senderObj.getAttribute("email");
+    console.log("Name: " + senderNameToSend);
+    chrome.storage.local.set({"name": senderNameToSend}, function() {});
+    console.log("Email: " + senderMailToSend);
+    chrome.storage.local.set({"email": senderMailToSend}, function() {});
     //-----------------------------------------------------
     
      //open popup that lets you choose time inetrval
@@ -150,19 +153,30 @@ function remindMeFunc(){
         var value = select.options[select.selectedIndex].value;
         var timerVal = parseInt(value);
         if(value > 0){
+            var s;
+            var n;
+            var m;
             chrome.storage.local.set({"timer": timerVal}, function() {});
-            chrome.runtime.sendMessage({
+            chrome.storage.local.get(["subject", "name", "email"], function(result) {
+               s = result.subject;
+               n = result.name;
+               m = result.email;
+
+               chrome.runtime.sendMessage({
                     timerValue: timerVal, 
                     task: "start",
-                    subject: subject,
-                    senderName: senderName,
-                    senderMail: senderMail
-                }
-                , 
-                function(response) {
-                    console.log(response.status);
-                }
-            );
+                    subject: s,
+                    senderName: n,
+                    senderMail: m
+                    }
+                    , 
+                    function(response) {
+                        console.log(response.status);
+                    }
+                );
+            });
+            
+            
             select.selectedIndex = 0;
             dialog.close();
         }
