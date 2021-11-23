@@ -41,7 +41,7 @@
       }
     ],
     "web_accessible_resources": [{ 
-        "resources": ["/images/clock.png", "content.css", "modalBox.html", "modalBox.css", "modalBox.js"],
+        "resources": ["/images/clock.png"],
         "matches": ["<all_urls>"]
       }]
   }

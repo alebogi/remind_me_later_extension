@@ -100,7 +100,7 @@ function remindMeFunc(){
 
 
     let option1 = document.createElement("option");
-    option1.value = "0.1";
+    option1.value = "5";
     option1.innerText = "5 min";
     newSelect.appendChild(option1);
 
@@ -139,13 +139,15 @@ function remindMeFunc(){
     let br = document.createElement("br");
     modal.appendChild(br);
 
+    let brr = document.createElement("br");
+    modal.appendChild(brr);
+
     let newBtn = document.createElement("button");
     newBtn.className="submitBtn";
     newBtn.innerText = "Submit";
     newBtn.onclick = () => {
         var select = modal.getElementsByClassName("selectClass")[0];
         var value = select.options[select.selectedIndex].value;
-        alert(value);
         var timerVal = parseInt(value);
         if(value > 0){
             chrome.storage.local.set({"timer": timerVal}, function() {});
@@ -161,6 +163,7 @@ function remindMeFunc(){
                     console.log(response.status);
                 }
             );
+            select.selectedIndex = 0;
             dialog.close();
         }
     }
@@ -197,26 +200,3 @@ function remindMeFunc(){
     });*/
 }
 
-
-
-function sendMssg(){
-    chrome.storage.local.get(["timer"], function (result) {
-        if (result.timer > -1){
-            
-            //send message to background.js to start timer
-            chrome.runtime.sendMessage({
-                    timerValue: result.timer, 
-                    task: "start",
-                    subject: subject,
-                    senderName: senderName,
-                    senderMail: senderMail
-                }
-                , 
-                function(response) {
-                    console.log(response.status);
-                }
-            );
-
-        }
-    });
-}
