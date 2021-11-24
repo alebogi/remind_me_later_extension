@@ -33,7 +33,7 @@ chrome.runtime.onMessage.addListener(
         notifsInfo.push(notif);
         notifsInfo.sort(mySort);
 
-        var alarmName = request.subject + " " + request.timerValue;
+        var alarmName = "myAlarm" + request.senderMail + Date.now().toString() ;
         chrome.alarms.create(alarmName, {delayInMinutes: request.timerValue} );
         sendResponse({status: "started"});
 
@@ -45,8 +45,9 @@ chrome.runtime.onMessage.addListener(
 
 //timer otkucao, treba da se posalje notif
 chrome.alarms.onAlarm.addListener((alarm) => {
-    //if (alarm.name === "myAlarm") {
+    if (alarm.name.substring(0, 7) === "myAlarm") {
         //get notification info from array
+        console.log("dingdong")
         let notif = notifsInfo.pop();
         chrome.storage.local.set({"notifsInfo": notifsInfo}, function() {});
 
@@ -60,5 +61,7 @@ chrome.alarms.onAlarm.addListener((alarm) => {
             requireInteraction: true
         });
         //chrome.alarms.clear("myAlarm");
-   // }
+    }else{
+        console.log("pogresan alarm??")
+    }
 });
