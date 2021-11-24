@@ -9,15 +9,12 @@ chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
     }
 })
 
-//globals
-let notifsInfo = new Array();
-
-//sort notifications in desc, last in array has smallest value
-function mySort(a ,b){
-    return b.timerValue - a.timerValue;
+function removeFromArrayByValue(arr, val){
+    var i = arr.indexOf(val);
+    if (i > -1) {
+        arr.splice(i, 1);
+    }
 }
-
-
 
 //waiting for a message to start timer
 chrome.runtime.onMessage.addListener(
@@ -30,14 +27,28 @@ chrome.runtime.onMessage.addListener(
             senderName: request.senderName,
             senderEmail: request.senderMail
         }
-        notifsInfo.push(notif);
-        notifsInfo.sort(mySort);
+       
 
-        var alarmName = "myAlarm" + request.senderMail + Date.now().toString() ;
+        var timestamp = Date.now().toString();
+
+        //we must use obj because it won't work with variable
+        var obj = {};
+        obj[timestamp] = notif;
+
+        var alarmName = "myAlarm" + timestamp;
         chrome.alarms.create(alarmName, {delayInMinutes: request.timerValue} );
         sendResponse({status: "started"});
 
-        chrome.storage.local.set({"notifsInfo": notifsInfo}, function() {});
+        chrome.storage.local.set(obj);
+
+        //add notif name in array od notifs
+        chrome.storage.local.get("notifArray", function(result) {
+            if (result.notifArray !== undefined){
+                var arr = result.notifArray;
+                arr.push(timestamp);
+                chrome.storage.local.set({"notifArray": arr}, function() {});
+            }       
+        });
       }
     }
 );
@@ -46,22 +57,42 @@ chrome.runtime.onMessage.addListener(
 //timer otkucao, treba da se posalje notif
 chrome.alarms.onAlarm.addListener((alarm) => {
     if (alarm.name.substring(0, 7) === "myAlarm") {
-        //get notification info from array
-        console.log("dingdong")
-        let notif = notifsInfo.pop();
-        chrome.storage.local.set({"notifsInfo": notifsInfo}, function() {});
+        //get notification info from storage  
+        var notifName = alarm.name.substring(7, );
+        //we must use obj because it won't work with variable
+        var obj = [notifName]
+        chrome.storage.local.get(obj, function(result) {
+            var notif = result[notifName];
+            chrome.notifications.create('remindMe', {
+                type: 'basic',
+                iconUrl: 'images/icons/logo_notif.png',
+                title: "Reminder!",
+                message: "You have e-mail: " + notif.mailSubject,
+                priority: 2,
+                contextMessage: "From: "+ notif.senderName + "(" + notif.senderEmail + ")",
+                requireInteraction: true
+            });
 
-        chrome.notifications.create('remindMe', {
-            type: 'basic',
-            iconUrl: 'images/icons/logo_notif.png',
-            title: "Reminder!",
-            message: "You have e-mail: " + notif.mailSubject,
-            priority: 2,
-            contextMessage: "From: "+ notif.senderName + "(" + notif.senderEmail + ")",
-            requireInteraction: true
-        });
-        //chrome.alarms.clear("myAlarm");
-    }else{
-        console.log("pogresan alarm??")
+            // clear notif from storage
+            chrome.storage.local.remove(notifName,function(){
+                var error = chrome.runtime.lastError;
+                   if (error) {
+                       console.error(error);
+                   }
+            });
+
+            //add notif name in array od notifs
+            chrome.storage.local.get("notifArray", function(result) {
+                if (result.notifArray !== undefined){
+                    var arr = result.notifArray;
+                    var i = arr.indexOf(notifName);
+                    if (i > -1) {
+                        arr.splice(i, 1);
+                    }
+                    chrome.storage.local.set({"notifArray": arr}, function() {});
+                }       
+            });
+            
+         });   
     }
 });

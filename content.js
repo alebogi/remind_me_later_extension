@@ -1,16 +1,4 @@
-// chrome.storage.local.get(["loadNum"], function (result) {
-//     if (result.loadNum == undefined ) { //first time loading page, just add button
-//         chrome.storage.local.set({"loadNum": 1}, function() {});
-//         addButton();
-       
-//     }else{ //>1 time loading page, first remove the button, that add it again
-//         let newNum = result.loadNum + 1;
-//         chrome.storage.local.set({"loadNum": newNum}, function() {});
-//         removeAll();
-//         addButton();
-//     }
-// });
-
+// we have to remove buttons in case they were already added, and then add it
 removeAll();
 addButton();
 
@@ -21,6 +9,17 @@ function removeAll(){
         elem.remove();
     }
     chrome.storage.local.set({"timer": -1}, function() {});
+
+    chrome.storage.local.remove("subject");
+    chrome.storage.local.remove("name");
+    chrome.storage.local.remove("email");
+
+    chrome.storage.local.get("notifArray", function(result) {
+        if (result.notifArray == undefined){
+            var arr = new Array();
+            chrome.storage.local.set({"notifArray": arr}, function() {});
+        }       
+    });
 }
 
 function addButton(){
@@ -103,7 +102,7 @@ function remindMeFunc(){
 
 
     let option1 = document.createElement("option");
-    option1.value = "5";
+    option1.value = "1";
     option1.innerText = "5 min";
     newSelect.appendChild(option1);
 
@@ -193,24 +192,5 @@ function remindMeFunc(){
     });
 
  
-    //------------------------------------------------------
-   /* chrome.storage.local.get(["timer"], function (result) {
-        if (result.timer > -1){
-            
-            //send message to background.js to start timer
-            chrome.runtime.sendMessage({
-                    timerValue: result.timer, 
-                    task: "start",
-                    subject: subject,
-                    senderName: senderName,
-                    senderMail: senderMail
-                }, 
-                function(response) {
-                    console.log(response.status);
-                }
-            );
-
-        }
-    });*/
 }
 
