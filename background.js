@@ -63,7 +63,7 @@ chrome.alarms.onAlarm.addListener((alarm) => {
         var obj = [notifName]
         chrome.storage.local.get(obj, function(result) {
             var notif = result[notifName];
-            chrome.notifications.create('remindMe', {
+            chrome.notifications.create(notifName, {
                 type: 'basic',
                 iconUrl: 'images/icons/logo_notif.png',
                 title: "Reminder!",
@@ -81,7 +81,7 @@ chrome.alarms.onAlarm.addListener((alarm) => {
                    }
             });
 
-            //add notif name in array od notifs
+            //clear notif name from array od notifs
             chrome.storage.local.get("notifArray", function(result) {
                 if (result.notifArray !== undefined){
                     var arr = result.notifArray;
