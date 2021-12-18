@@ -9,13 +9,6 @@ chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
     }
 })
 
-function removeFromArrayByValue(arr, val){
-    var i = arr.indexOf(val);
-    if (i > -1) {
-        arr.splice(i, 1);
-    }
-}
-
 //waiting for a message to start timer
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
