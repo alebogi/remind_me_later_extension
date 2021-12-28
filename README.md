@@ -10,7 +10,7 @@ Options page allows you to see created reminders.
 
 ## Instalation
 
-1. Load extension directory (whole project)
+1. Load extension directory (src directory)
 2. Open the Extension Management page by navigating to chrome://extensions.
     - Alternatively, open this page by clicking on the Extensions menu button and selecting Manage Extensions at the bottom of the menu.
     - Alternatively, open this page by clicking on the Chrome menu, hovering over More Tools then selecting Extensions
